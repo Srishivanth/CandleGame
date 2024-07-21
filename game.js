@@ -97,6 +97,61 @@ function mouseReleased() {
     selectedElement = null;
 }
 
+function touchStarted() {
+    if (!block) {
+        startTime = millis();
+        block = true;
+    }
+    for (let candle of redCandles.concat(greenCandles)) {
+        if (candle.contains(touchX, touchY)) {
+            selectedElement = candle;
+            offsetX = candle.x - touchX;
+            offsetY = candle.y - touchY;
+            return false; // Prevent default action
+        }
+    }
+
+    if (key.contains(touchX, touchY)) {
+        selectedElement = key;
+        offsetX = key.x - touchX;
+        offsetY = key.y - touchY;
+        return false; // Prevent default action
+    }
+    return false; // Prevent default action
+}
+
+function touchMoved() {
+    if (selectedElement) {
+        let newX = touchX + offsetX;
+        let newY = touchY + offsetY;
+
+        if (selectedElement.color === 'red') {
+            newX = selectedElement.x;
+        } else if (selectedElement.color === 'green' || selectedElement.color === 'key') {
+            newY = selectedElement.y;
+        }
+
+        newX = constrain(newX, 0, width - selectedElement.w);
+        newY = constrain(newY, 0, height - selectedElement.h);
+
+        if (!checkCollision(newX, newY, selectedElement.w, selectedElement.h, selectedElement)) {
+            selectedElement.x = newX;
+            selectedElement.y = newY;
+        }
+
+        if (selectedElement.color === 'key' && selectedElement.x + selectedElement.w >= width) {
+            endTime = millis();
+            noLoop();
+            displayWinMessage();
+        }
+    }
+    return false; // Prevent default action
+}
+
+function touchEnded() {
+    selectedElement = null;
+}
+
 class Candle {
     constructor(x, y, w, h, color) {
         this.x = x;
