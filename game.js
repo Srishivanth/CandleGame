@@ -1,12 +1,15 @@
 let redCandles = [];
 let greenCandles = [];
 let key;
+let keyImage;
 let selectedElement = null;
 let offsetX, offsetY;
 let startTime, block = false;
 let endTime;
 
-KeyImg=loadImage('key.png');
+function preload() {
+  keyImage = loadImage('key.png'); // Ensure the image file is named 'key.png' and is in the same directory
+}
 
 function setup() {
   createCanvas(330, 330);
@@ -27,7 +30,7 @@ function setup() {
     new Candle(223, 3, 104, 50, 'green')
   ];
 
-  key = new Candle(113, 113, 100, 50, KeyImg);
+  key = new Candle(113, 113, 100, 50, 'key');
 }
 
 function draw() {
@@ -89,12 +92,64 @@ function mousePressed() {
     offsetX = key.x - mouseX;
     offsetY = key.y - mouseY;
   }
-
-  // Prevent page refresh on mobile devices
-  event.preventDefault();
 }
 
 function mouseReleased() {
+  selectedElement = null;
+}
+
+function touchStarted() {
+  if (!block) {
+    startTime = millis();
+    block = true;
+  }
+  for (let candle of redCandles.concat(greenCandles)) {
+    if (candle.contains(touchX, touchY)) {
+      selectedElement = candle;
+      offsetX = candle.x - touchX;
+      offsetY = candle.y - touchY;
+      return false; // Prevent default action
+    }
+  }
+
+  if (key.contains(touchX, touchY)) {
+    selectedElement = key;
+    offsetX = key.x - touchX;
+    offsetY = key.y - touchY;
+    return false; // Prevent default action
+  }
+  return false; // Prevent default action
+}
+
+function touchMoved() {
+  if (selectedElement) {
+    let newX = touchX + offsetX;
+    let newY = touchY + offsetY;
+
+    if (selectedElement.color === 'red') {
+      newX = selectedElement.x;
+    } else if (selectedElement.color === 'green' || selectedElement.color === 'key') {
+      newY = selectedElement.y;
+    }
+
+    newX = constrain(newX, 0, width - selectedElement.w);
+    newY = constrain(newY, 0, height - selectedElement.h);
+
+    if (!checkCollision(newX, newY, selectedElement.w, selectedElement.h, selectedElement)) {
+      selectedElement.x = newX;
+      selectedElement.y = newY;
+    }
+
+    if (selectedElement.color === 'key' && selectedElement.x + selectedElement.w >= width) {
+      endTime = millis();
+      noLoop();
+      displayWinMessage();
+    }
+  }
+  return false; // Prevent default action
+}
+
+function touchEnded() {
   selectedElement = null;
 }
 
@@ -109,8 +164,12 @@ class Candle {
 
   show() {
     stroke(0);
-    fill(this.color === 'red' ? color(255, 0, 0) : this.color === 'green' ? color(0, 255, 0) : color(255, 215, 0));
-    rect(this.x, this.y, this.w, this.h);
+    if (this.color === 'key') {
+      image(keyImage, this.x, this.y, this.w, this.h);
+    } else {
+      fill(this.color === 'red' ? color(255, 0, 0) : this.color === 'green' ? color(0, 255, 0) : color(255, 215, 0));
+      rect(this.x, this.y, this.w, this.h);
+    }
   }
 
   contains(px, py) {
@@ -132,7 +191,7 @@ function drawGrid() {
 
 function checkCollision(x, y, w, h, exclude) {
   for (let candle of redCandles.concat(greenCandles).concat(key)) {
-    if (candle !== exclude && x < candle.x + candle.w && x + w > candle.x && y < candle.y + candle.h && y + h > candle.y){
+    if (candle !== exclude && x < candle.x + candle.w && x + w > candle.x && y < candle.y + candle.h && y + h > candle.y) {
       return true;
     }
   }
@@ -152,4 +211,4 @@ function displayWinMessage() {
 // Prevent page refresh on mobile devices
 document.addEventListener('touchmove', function(event) {
   event.preventDefault();
-}, false);
+}, { passive: false });
