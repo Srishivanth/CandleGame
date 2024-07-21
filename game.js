@@ -94,6 +94,33 @@ function mousePressed() {
   }
 }
 
+function mouseMoved() {
+  if (selectedElement) {
+    let newX = mouseX + offsetX;
+    let newY = mouseY + offsetY;
+
+    if (selectedElement.color === 'red') {
+      newX = selectedElement.x;
+    } else if (selectedElement.color === 'green' || selectedElement.color === 'key') {
+      newY = selectedElement.y;
+    }
+
+    newX = constrain(newX, 0, width - selectedElement.w);
+    newY = constrain(newY, 0, height - selectedElement.h);
+
+    if (!checkCollision(newX, newY, selectedElement.w, selectedElement.h, selectedElement)) {
+      selectedElement.x = newX;
+      selectedElement.y = newY;
+    }
+
+    if (selectedElement.color === 'key' && selectedElement.x + selectedElement.w >= width) {
+      endTime = millis();
+      noLoop();
+      displayWinMessage();
+    }
+  }
+}
+
 function mouseReleased() {
   selectedElement = null;
 }
@@ -126,7 +153,7 @@ function touchMoved() {
     let newX = touchX + offsetX;
     let newY = touchY + offsetY;
 
-    if (selectedElement.color === 'red') {
+    if (selectedElement.color === 'ed') {
       newX = selectedElement.x;
     } else if (selectedElement.color === 'green' || selectedElement.color === 'key') {
       newY = selectedElement.y;
@@ -167,7 +194,7 @@ class Candle {
     if (this.color === 'key') {
       image(keyImage, this.x, this.y, this.w, this.h);
     } else {
-      fill(this.color === 'red' ? color(255, 0, 0) : this.color === 'green' ? color(0, 255, 0) : color(255, 215, 0));
+      fill(this.color === 'ed'? color(255, 0, 0) : this.color === 'green'? color(0, 255, 0) : color(255, 215, 0));
       rect(this.x, this.y, this.w, this.h);
     }
   }
@@ -180,18 +207,18 @@ class Candle {
 function drawGrid() {
   stroke(255, 255, 0);
   for (let x = 0; x < width; x += 55) {
-    strokeWeight(x % 165 === 0 ? 2 : 1);
+    strokeWeight(x % 165 === 0? 2 : 1);
     line(x, 0, x, height);
   }
   for (let y = 0; y < height; y += 55) {
-    strokeWeight(y % 165 === 0 ? 2 : 1);
+    strokeWeight(y % 165 === 0? 2 : 1);
     line(0, y, width, y);
   }
 }
 
 function checkCollision(x, y, w, h, exclude) {
   for (let candle of redCandles.concat(greenCandles).concat(key)) {
-    if (candle !== exclude && x < candle.x + candle.w && x + w > candle.x && y < candle.y + candle.h && y + h > candle.y) {
+    if (candle!== exclude && x < candle.x + candle.w && x + w > candle.x && y < candle.y + candle.h && y + h > candle.y) {
       return true;
     }
   }
