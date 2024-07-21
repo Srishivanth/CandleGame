@@ -1,14 +1,20 @@
 let redCandles = [];
 let greenCandles = [];
 let key;
+let keyImage;
 let selectedElement = null;
 let offsetX, offsetY;
 let startTime, block = false;
+let endTime;
 
-keyimg=loadImage('key.png')
+function preload() {
+    keyImage = loadImage('key.png'); // Load the key image
+}
 
 function setup() {
-    createCanvas(330, 330);
+    let canvas = createCanvas(330, 330);
+    canvas.parent('game-container'); // Attach canvas to div
+
     redCandles = [
         new Candle(3, 58, 50, 104, 'red'),
         new Candle(58, 3, 50, 159, 'red'),
@@ -26,7 +32,7 @@ function setup() {
         new Candle(223, 3, 104, 50, 'green')
     ];
 
-    key = new Candle(113, 113, 100, 50, keyimg);
+    key = new Candle(113, 113, 100, 50, 'key');
 }
 
 function draw() {
@@ -105,8 +111,12 @@ class Candle {
 
     show() {
         stroke(0);
-        fill(this.color === 'red' ? color(255, 0, 0) : this.color === 'green' ? color(0, 255, 0) : color(255, 215, 0));
-        rect(this.x, this.y, this.w, this.h);
+        if (this.color === 'key') {
+            image(keyImage, this.x, this.y, this.w, this.h); // Display the key image
+        } else {
+            fill(this.color === 'red' ? color(255, 0, 0) : this.color === 'green' ? color(0, 255, 0) : color(255, 215, 0));
+            rect(this.x, this.y, this.w, this.h);
+        }
     }
 
     contains(px, py) {
@@ -127,7 +137,7 @@ function drawGrid() {
 }
 
 function checkCollision(x, y, w, h, exclude) {
-    for (let candle of redCandles.concat(greenCandles).concat(key)) {
+    for (let candle of redCandles.concat(greenCandles).concat([key])) {
         if (candle !== exclude && x < candle.x + candle.w && x + w > candle.x && y < candle.y + candle.h && y + h > candle.y) {
             return true;
         }
