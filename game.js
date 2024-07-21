@@ -6,6 +6,8 @@ let offsetX, offsetY;
 let startTime, block = false;
 let endTime;
 
+KeyImg=loadImage('key.png');
+
 function setup() {
   createCanvas(330, 330);
   redCandles = [
@@ -25,7 +27,7 @@ function setup() {
     new Candle(223, 3, 104, 50, 'green')
   ];
 
-  key = new Candle(113, 113, 100, 50, 'key');
+  key = new Candle(113, 113, 100, 50, KeyImg);
 }
 
 function draw() {
