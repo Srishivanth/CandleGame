@@ -17,23 +17,23 @@ function setup() {
     canvas.style('display', 'block'); // Ensure the canvas is displayed as a block element
     
     redCandles = [
-        new Candle(3, 58, 50, 104, 'red'),
-        new Candle(58, 3, 50, 159, 'red'),
-        new Candle(3, 223, 50, 104, 'red'),
+        new Candle(3, 3, 50, 104, 'red'),
+        new Candle(58, 168, 50, 159, 'red'),
         new Candle(113, 168, 50, 104, 'red'),
-        new Candle(168, 3, 50, 104, 'red'),
-        new Candle(223, 58, 50, 159, 'red'),
-        new Candle(278, 223, 50, 104, 'red')
+        new Candle(168, 113, 50, 159, 'red'),
+        new Candle(223, 223, 50, 104, 'red'),
+        new Candle(278, 58, 50, 109, 'red'),
     ];
 
     greenCandles = [
-        new Candle(3, 168, 104, 50, 'green'),
-        new Candle(168, 223, 104, 50, 'green'),
-        new Candle(58, 278, 104, 50, 'green'),
-        new Candle(223, 3, 104, 50, 'green')
+        new Candle(58, 3, 104, 50, 'green'),
+        new Candle(168, 58, 104, 50, 'green'),
+        new Candle(223, 58, 104, 50, 'green'),
+        new Candle(223, 168, 104, 50, 'green'),
+        new Candle(113, 278, 104, 50, 'green')
     ];
 
-    key = new Candle(113, 113, 100, 50, 'key');
+    key = new Candle(3, 113, 100, 50, 'key');
 }
 
 function draw() {
