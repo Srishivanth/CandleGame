@@ -19,16 +19,17 @@ function setup() {
     redCandles = [
         new Candle(3, 3, 50, 104, 'red'),
         new Candle(58, 168, 50, 159, 'red'),
-        new Candle(113, 168, 50, 104, 'red'),
+        new Candle(113, 58, 50, 104, 'red'),
         new Candle(168, 113, 50, 159, 'red'),
         new Candle(223, 223, 50, 104, 'red'),
         new Candle(278, 58, 50, 109, 'red'),
     ];
 
+
     greenCandles = [
         new Candle(58, 3, 104, 50, 'green'),
         new Candle(168, 58, 104, 50, 'green'),
-        new Candle(223, 58, 104, 50, 'green'),
+        new Candle(223, 3, 104, 50, 'green'),
         new Candle(223, 168, 104, 50, 'green'),
         new Candle(113, 278, 104, 50, 'green')
     ];
